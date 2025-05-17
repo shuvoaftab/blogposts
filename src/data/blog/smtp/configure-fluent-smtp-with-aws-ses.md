@@ -1,0 +1,126 @@
+---
+author: Ibrahim Sharif
+pubDatetime: 2022-04-11 04:00:00
+modDatetime: null
+title: Configure Fluent SMTP with AWS SES
+description: A guide to configuring your AWS SES email with FluentSMTP for WordPress email delivery.
+tags:
+  - FluentSMTP
+  - WordPress
+  - Email
+  - AWS
+  - SES
+  - SMTP
+  - Email Deliverability
+category: WordPress
+featured: false
+draft: false
+---
+
+Amazon Simple Email Service (SES) is a cost-effective, flexible, and scalable email service that enables developers, and site owners to send mail from WordPress to their customers, and users or send notifications for test purposes. AWS SES is also the cheapest top-quality email delivery method available in the market. In this guide, we are going to. configure Fluent SMTP with AWS SES to send emails from WordPress through SES. If you have checked or reviewed my other article about [Configuring Gmail with Fluent SMTP](../configure-gmail-with-fluent-smtp/) you will find it easier to follow this guide.
+
+## Table of Contents
+
+## Prerequisites to Configure Fluent SMTP with AWS SES
+
+In order to proceed, there are a few things that are needed beforehand to configure Fluent SMTP with Yahoo as below:
+
+| Requirement             | Details                                                                                   |
+|-------------------------|-------------------------------------------------------------------------------------------|
+| **Verified Identity**   | You must verify an email or a domain as a verified identity inside AWS SES.               |
+| **Production Access**   | You must also get approval for Production access to send emails to users.                 |
+| **Administrative Permission** | WordPress Administrator Role-based user access.                                      |
+| **Firewall Status**     | Port 465 Opened on WordPress Server.                                                      |
+| **TLS Support**         | TLS v1.0, v1.1, v1.2, v1.3 support from the server where WordPress is hosted.             |
+
+## Steps to Configure Fluent SMTP with AWS SES
+
+1. Go to SES Home & Check the verified Identities.
+2. Create an SMTP Credential.
+3. Create a new Fluent SMTP Connection with Other SMTP Methods.
+4. Put the necessary details and Save.
+5. Test the Connection.
+
+## The Procedure to Configure Fluent SMTP with AWS SES
+
+### Go to SES Home
+
+Please visit [https://console.aws.amazon.com/console/home](https://console.aws.amazon.com/console/home) and log in to your Amazon Console account. Then on the Search Bar search for "ses" and the result will show Amazon Simple Email Service click on it. the URL will similar to [https://us-east-1.console.aws.amazon.com/ses/home?region=us-east-1#/account](https://us-east-1.console.aws.amazon.com/ses/home?region=us-east-1#/account) depending on your selected Region.
+
+![Searching for SES in AWS Console](@/assets/images/posts/fluentsmtp/fluent_smtp_ses_search-shuvoaftab.png "Screenshot showing how to search for SES in the AWS Console")
+
+Now go to Verified Identities and check if your target domain is verified or not. If it is not on the list please follow my other guide regarding Verify a Domain in AWS SES first.
+
+![Verified Identities in AWS SES](@/assets/images/posts/fluentsmtp/fluent_smtp_aws_ses_verified-shuvoaftab.png "Screenshot of the Verified Identities section in AWS SES")
+
+### Create an SMTP Credential
+
+Now go to **Account Dashboard** and then keep note of the **SMTP Endpoint** and **STARTTLS Ports**.
+
+Click on **Create SMTP Credentials**
+
+![Create SMTP Credentials in AWS SES](@/assets/images/posts/fluentsmtp/fluent_smtp_aws_ses_create-shuvoaftab.png "Screenshot showing the option to create SMTP credentials in AWS SES")
+
+Now give a **Name** for the **SMTP credential**. In this case, I used **FluentSMTPGuide**.
+
+![Naming SMTP Credential in AWS SES](@/assets/images/posts/fluentsmtp/fluent_smtp_aws_ses_create_name-shuvoaftab.png "Screenshot of the form to name a new SMTP credential in AWS SES")
+
+Now you will be provided with an **SMTP Username** and an **SMTP Password**.
+
+![SMTP Username and Password Generated in AWS SES](@/assets/images/posts/fluentsmtp/fluent_smtp_aws_ses_created_user_pass-shuvoaftab.png "Screenshot showing generated SMTP username and password in AWS SES")
+
+### Create a new Fluent SMTP Connection for AWS SES
+
+Now it's time to configure Fluent SMTP. Create a new SMTP Connection and the method is "**Other** **SMTP**".
+
+### Keypoints of necessary details
+
+| Setting            | Value / Description                                                                                  |
+|--------------------|-----------------------------------------------------------------------------------------------------|
+| **From Email**     | Any email address (e.g., **any@yourdomain.com**) where `yourdomain.com` is a verified identity.     |
+| **From Name**      | Any name you prefer. (e.g., **Ibrahim Sharif**)                                                     |
+| **SMTP Host**      | **email-smtp.us-east-1.amazonaws.com** (varies by region)                                           |
+| **SMTP Port**      | **465**                                                                                             |
+| **Encryption**     | **SSL**                                                                                             |
+| **Auto TLS**       | Yes                                                                                                 |
+| **Authentication** | Yes. It's better to store the access keys in the database.                                          |
+| **SMTP Username**  | The **SMTP Username** provided by SES earlier.                                                      |
+| **SMTP Password**  | The **SMTP Password** provided by SES earlier.                                                      |
+
+![Fluent SMTP AWS SES Settings Example](@/assets/images/posts/fluentsmtp/fluent_smtp_aws_ses_settings-shuvoaftab.png "Screenshot of Fluent SMTP settings configured for AWS SES")
+
+### Test the Connection
+
+Now it's time to test the connection if it's working or not! Go to Fluent SMTP > Email Test:  
+\-> Use the From as your Yahoo email is just configured.  
+\-> Send To where you want to receive the test email.  
+\-> HTML should be turned on to avoid suspicious activity by Spam Filters.
+
+![Fluent SMTP Email Test Successfully Sent](@/assets/images/posts/fluentsmtp/Fluent_SMTP_email_test_successfully_sent.png "Screenshot showing a successful email test in Fluent SMTP")
+
+Now click Send Test Email and check the destination Email Address.
+
+![Test Email Received from AWS SES](@/assets/images/posts/fluentsmtp/fluent_smtp_ses_received.png "Screenshot of the received test email sent via AWS SES")
+
+In this case, the test email is received and we are done configuring the AWS SES to send WordPress emails using the Fluent SMTP Plugin.
+
+## Bonus: Delete AWS SES SMTP User
+
+If you are wondering if you want to delete an SMTP User which is not needed anymore please follow the below steps:
+
+Go to [https://**us-east-1**.console.aws.amazon.com/iamv2/home](https://us-east-1.console.aws.amazon.com/iamv2/home) replacing the **us-east-1** with your desired Region.  
+Alternatively, you can go to **Your Account Name** in the Top right corner > **Security Credentials** > On the left panel click on **Users**
+
+![Deleting an SMTP user in AWS SES](@/assets/images/posts/fluentsmtp/fluent_smtp_aws_ses_delete_user-shuvoaftab.png)
+
+Now select the user and Delete it from the list. You should not keep unused users which you do not use for security measurement.
+
+## Important Note
+
+It is highly recommended to configure a cronjob replacing WordPress's Default PHP-based Cronjob to operate Email sending and other scheduled jobs smoothly.  
+Some hosting may not allow running a cronjob below 5 Minutes. But it is still better than a PHP-Based cronjob.
+
+Emails landing in Spam Folders depend on numerous factors including IP reputation, Domain reputation, and Email Body Content.
+
+
+<!-- * * * -->

@@ -1,0 +1,97 @@
+---
+author: Ibrahim Sharif
+pubDatetime: 2022-05-06 10:00:00
+modDatetime: null
+title: Configure Fluent SMTP with Outlook
+description: A guide to configuring your Outlook email with FluentSMTP for WordPress email delivery.
+tags:
+  - FluentSMTP
+  - WordPress
+  - Email
+  - Outlook
+  - Office365
+  - Microsoft
+  - SMTP
+  - Email Deliverability
+category: WordPress
+featured: false
+draft: false
+---
+
+The goal of this tutorial is to send emails from WordPress using your Personal Outlook Email **_@outlook.com_** by using the Fluent SMTP Plugin. If you have checked or reviewed my other article about [Configuring Gmail with Fluent SMTP](../configure-gmail-with-fluent-smtp/) you will find it easier to follow this guide.
+
+## Table of Contents
+
+## Prerequisites to Configure Fluent SMTP with Outlook
+
+In order to proceed, there are a few things that are needed beforehand to configure Fluent SMTP with Outlook as below:
+
+| Requirement                | Description                                                                                   |
+|----------------------------|-----------------------------------------------------------------------------------------------|
+| **Outlook Email Address**  | An existing **_you@outlook.com_** email address with a password.                              |
+| **Administrative Permission** | WordPress Administrator Role-based user access.                                             |
+| **Firewall Status**        | Port 587 opened.                                                                              |
+| **TLS Support**            | TLS v1.0, v1.1, v1.2, v1.3 support from the server where WordPress is hosted.                 |
+
+## Steps to Configure Fluent SMTP with Outlook
+
+1. Grab the Outlook Email Address and its Password
+2. Create a new Fluent SMTP Connection with Other Methods
+3. Put necessary details and Save
+4. Test the Connection
+
+## Video Guide on Configuring Fluent SMTP with Outlook
+
+https://youtu.be/KvLbGegHOa8
+
+## The Procedure to Configure Fluent SMTP with Outlook
+
+### Grab the Outlook Email Address
+
+Let's assume our target Email Address to be configured is **ibrahim@outlook.com** and its password: **I2X22AZ21**
+
+![Outlook dashboard screenshot](@/assets/images/posts/fluentsmtp/fluent_smtp_outlook_dashboard.png)
+
+### Create a new Fluent SMTP Connection
+
+Now it's time to configure Fluent SMTP. Create a new SMTP Connection and the method is **Other**.
+
+### Keypoints Of Necessary Details
+
+| Setting           | Value/Description                                                                 |
+|-------------------|----------------------------------------------------------------------------------|
+| **From Email**    | The Outlook email address **ibrahim@outlook.com**                                |
+| **From Name**     | The name you want to use (e.g., **Ibrahim Sharif**)                              |
+| **SMTP Host**     | smtp-mail.outlook.com                                                            |
+| **SMTP Port**     | 587                                                                              |
+| **Encryption**    | TLS                                                                              |
+| **Auto TLS**      | Yes                                                                              |
+| **Authentication**| Yes. It's better to store the access keys in the database.                       |
+| **SMTP Username** | The Outlook email address **ibrahim@outlook.com**                                |
+| **SMTP Password** | Email password: **I2X22AZ21**                                                    |
+
+![Fluent SMTP Outlook settings example](@/assets/images/posts/fluentsmtp/fluent_smtp_outlook_settings.png)
+
+### Test the Connection
+
+Now it's time to test the connection if it's working or not! Go to Fluent SMTP > Email Test:  
+\-> Use the From as your Outlook email is just configured.  
+\-> Send To where you want to receive the test email.  
+\-> HTML should be turned on to avoid suspicious activity by Spam Filters.
+
+![Fluent SMTP test email sent successfully (generic screenshot)](@/assets/images/posts/fluentsmtp/fluent_smtp_gmail_test_sent_success.png)
+
+Now click Send Test Email and check the destination Email Address.
+
+![Test email received from Outlook via Fluent SMTP](@/assets/images/posts/fluentsmtp/fluent_smtp_outlook_received.png)
+
+In this case, the test email is received and we are done configuring the Outlook Email address to send WordPress emails using the Fluent SMTP Plugin.
+
+## Important Note
+
+It is highly recommended to configure a cronjob replacing WordPress's Default PHP-based Cronjob to operate Email sending and other scheduled jobs smoothly.  
+Some hosting may not allow running a cronjob below 5 Minutes. But it is still better than a PHP-Based cronjob.
+
+Emails landing in Spam Folders depend on numerous factors including IP reputation, Domain reputation, and Email Body Content.
+
+<!-- * * * -->

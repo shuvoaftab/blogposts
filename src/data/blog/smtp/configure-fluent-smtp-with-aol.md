@@ -1,0 +1,106 @@
+---
+author: Ibrahim Sharif
+pubDatetime: 2022-04-10 00:10:00
+modDatetime: null
+title: Configure Fluent SMTP with AOL
+description: A guide to configuring your AOL email with FluentSMTP for WordPress email delivery.
+tags:
+  - FluentSMTP
+  - WordPress
+  - Email
+  - AOL
+  - SMTP
+  - Email Deliverability
+category: WordPress
+featured: false
+draft: false
+---
+
+This guide helps you configure your AOL email (**you@aol.com**) with the FluentSMTP plugin to send emails from WordPress. If you’ve reviewed the [Configuring Gmail with FluentSMTP](../configure-gmail-with-fluent-smtp/) guide, this will feel familiar.
+
+## Table of Contents
+
+## Prerequisites
+
+Before configuring FluentSMTP with AOL, ensure you have:
+
+- **AOL Email Address**: An existing email like **you@aol.com**.
+- **AOL App Password**: A generated app password from AOL.
+- **Administrative Permission**: WordPress Administrator role access.
+- **Firewall Status**: Port 587 open.
+- **TLS Support**: Server support for TLS v1.0, v1.1, v1.2, or v1.3.
+
+## Steps to Configure
+
+Follow these steps to set up FluentSMTP with AOL:
+
+### Step 1: Obtain AOL Email Address
+
+Use your AOL email address, e.g., **ibrahim@aol.com**.
+
+![AOL Dashboard](@/assets/images/posts/fluentsmtp/fluent_smtp_aol_dashboard.png)
+
+### Step 2: Generate an App Password
+
+AOL requires an app-specific password:
+
+1. Visit [AOL Account Security](https://login.aol.com/account/security?lang=en-US).
+2. Click **Generate and Manage app passwords**.
+3. Name the app (e.g., “FluentSMTP Guide”).
+4. Copy the generated password.
+
+![Generate App Password](@/assets/images/posts/fluentsmtp/fluent_smtp_aol_generate_app_password.png)
+
+![App Password Name](@/assets/images/posts/fluentsmtp/fluent_smtp_aol_generate_app_password_name.png)
+
+![Copy Password](@/assets/images/posts/fluentsmtp/fluent_smtp_generate_app_password_key.png)
+
+### Step 3: Create a FluentSMTP Connection
+
+In WordPress, create a new FluentSMTP connection:
+
+1. Go to FluentSMTP settings.
+2. Select **Other** as the connection method.
+
+### Step 4: Enter Connection Details
+
+Configure with these settings:
+
+| Field             | Value                                   |
+|-------------------|-----------------------------------------|
+| From Email        | Your AOL email (e.g., **ibrahim@aol.com**) |
+| From Name         | Your preferred name (e.g., “Ibrahim Sharif”) |
+| SMTP Host         | `smtp.aol.com`                         |
+| SMTP Port         | `587`                                  |
+| Encryption        | TLS                                    |
+| Auto TLS          | Yes                                    |
+| Authentication    | Yes (store keys in the database)       |
+| SMTP Username     | Your AOL email (e.g., **ibrahim@aol.com**) |
+| SMTP Password     | The app password generated earlier      |
+
+![FluentSMTP Settings](@/assets/images/posts/fluentsmtp/fluent_smtp_aol_settings.png)
+
+### Step 5: Test the Connection
+
+Test the configuration:
+
+1. Go to **FluentSMTP > Email Test**.
+2. Set **From** to your AOL email.
+3. Choose a recipient email.
+4. Enable HTML to avoid spam filters.
+5. Click **Send Test Email** and check the recipient’s inbox.
+
+![Test Email Success](@/assets/images/posts/fluentsmtp/fluent_smtp_gmail_test_sent_success.png)
+
+![Received Email](@/assets/images/posts/fluentsmtp/fluent_smtp_aol_received.png)
+
+If the test email is received, your AOL email is configured.
+
+## Video Guide
+
+Watch the process: [Configure FluentSMTP with AOL](https://youtu.be/6KdypvKAGYg)
+
+## Best Practices
+
+- **Cronjob Configuration**: Use a system cronjob instead of WordPress’s PHP-based cronjob for reliable email sending.
+- **Spam Prevention**: Optimize IP reputation, domain reputation, and email content to avoid spam folders.

@@ -1,0 +1,116 @@
+---
+author: Ibrahim Sharif
+pubDatetime: 2022-05-01 22:00:00
+modDatetime: null
+title: Configure Gmail with Fluent SMTP
+description: A guide to configuring your Gmail email with FluentSMTP for WordPress email delivery.
+tags:
+  - FluentSMTP
+  - WordPress
+  - Email
+  - Google
+  - Gmail
+  - Workspace
+  - SMTP
+  - Email Deliverability
+category: WordPress
+featured: false
+draft: false
+---
+
+> This feature has been deprecated as of 2022 and the new method is to use app passwords. Please check out our new guide for that here: [**Configure Gmail or Google Workspace via SMTP in Fluent SMTP.**](../configure-google-gmail-with-fluent-smtp/)
+> 
+> **Update in the Google's Security policy:**
+
+## Table of Contents
+
+## The goal of Configuring Gmail with Fluent SMTP
+
+The goal of this tutorial is to send emails from WordPress using your Personal Email **_@gmail.com_** or your business email **_@domain.com_** which is using Google Workspace Subscription by using the Fluent SMTP Plugin.
+
+## Prerequisites to Configure Gmail with Fluent SMTP
+
+In order to proceed, there are a few things that are needed beforehand to configure Fluent SMTP with Gmail as below:
+
+| Requirement                | Details                                                                                   |
+|----------------------------|-------------------------------------------------------------------------------------------|
+| **Gmail Email Address**    | An existing **_you@gmail.com_** email address with a Password.                            |
+| **Administrative Permission** | WordPress Administrator Role-based user access.                                         |
+| **Firewall Status**        | Port 465 Opened.                                                                          |
+| **TLS Support**            | TLS v1.0, v1.1, v1.2, v1.3 support from the server where WordPress is hosted.             |
+| **Inside Google My Account** | Allow less secure apps, Unlock Display Captcha                                           |
+
+## Steps to Configure Gmail with Fluent SMTP
+
+1. Grab the Email Address and its Password
+2. Allow less secure apps from Google My Account
+3. Unlock Display Captcha from Google My Account
+4. Create a new Fluent SMTP Connection with Other Methods
+5. Put necessary details and Save
+6. Test the Connection
+
+## Video Guide to Configure Gmail with Fluent SMTP
+
+https://youtu.be/uA1EZYD-UEU
+
+## The procedure of Configuring Gmail with Fluent SMTP
+
+### Grab the Email Address and its Password
+
+Let's assume our target Email Address to be configured is **ibrahim@gmail.com** and its password: **I2X22AZ21**
+
+### Allow less secure apps
+
+Please visit this URL: [https://myaccount.google.com/lesssecureapps](https://myaccount.google.com/lesssecureapps) and then turn ON Allow less secure apps.
+
+![Allow less secure apps enabled in Google Account](@/assets/images/posts/fluentsmtp/fluent_smtp_gmail_less_secure_on.png)
+
+### Unlock Display Captcha
+
+Please visit this URL: [https://www.google.com/accounts/DisplayUnlockCaptcha](https://www.google.com/accounts/DisplayUnlockCaptcha) and then proceed with the steps.
+
+![Unlock Display Captcha page in Google Account](@/assets/images/posts/fluentsmtp/fluent_smtp_gmail_unlock_captcha.png)
+
+![Display Captcha successfully unlocked in Google Account](@/assets/images/posts/fluentsmtp/fluent_smtp_gmail_unlock_captcha_done.png)
+
+### Create a new Fluent SMTP Connection
+
+Now it's time to configure Fluent SMTP. Create a new SMTP Connection and the method is **Other**.
+
+### Keypoints of necessary details
+
+| Setting           | Value                                                                                   |
+|-------------------|-----------------------------------------------------------------------------------------|
+| **From Email**    | The Gmail email address **ibrahim@gmail.com**                                           |
+| **From Name**     | The name you want to use. Example: **Ibrahim Sharif**                                   |
+| **SMTP Host**     | smtp.gmail.com                                                                          |
+| **SMTP Port**     | 465                                                                                     |
+| **Encryption**    | SSL                                                                                     |
+| **Auto TLS**      | Yes                                                                                     |
+| **Authentication**| Yes. It's better to store the access keys in the database.                              |
+| **SMTP Username** | The Gmail email address **ibrahim@gmail.com**                                           |
+| **SMTP Password** | Email password: **I2X22AZ21**                                                           |
+
+![Fluent SMTP Gmail settings example](@/assets/images/posts/fluentsmtp/fluent_smtp_gmail_settings.png)
+
+### Test the Connection
+
+Now it's time to test the connection if it's working or not! Go to Fluent SMTP > Email Test:  
+\-> Use the From as your Gmail email is just configured.  
+\-> Send To where you want to receive the test email.  
+\-> HTML should be turned on to avoid suspicious activity by Spam Filters.
+
+![Fluent SMTP Gmail test email sent successfully](@/assets/images/posts/fluentsmtp/fluent_smtp_gmail_test_sent_success.png)
+
+Now click Send Test Email and check the destination Email Address.
+
+![Test email received from Gmail via Fluent SMTP](@/assets/images/posts/fluentsmtp/fluent_smtp_gmail_received.png)
+
+In this case, the test email is received and we are done configuring the Gmail Email address to send WordPress emails using the Fluent SMTP Plugin.
+
+## Important Note
+
+It is highly recommended to configure a cron job replacing WordPress's Default PHP-based Cron job to operate Email sending and other scheduled jobs smoothly.  
+Some hosting may not allow running a cron job below 5 Minutes. But it is still better than a PHP-Based cron job.
+
+Emails landing in Spam Folders depend on numerous factors including IP reputation, Domain reputation, and Email Body Content.
