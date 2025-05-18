@@ -1,0 +1,101 @@
+---
+author: Ibrahim Sharif
+pubDatetime: 2019-07-14 09:30:00
+modDatetime: null
+title: Dark and Light theme toggle using CSS
+description: How to guide on Dark and Light theme toggle using CSS.
+tags:
+  - CSS
+  - JavaScript
+  - Theme Toggle
+  - Web Design
+  - UI
+category:
+  - Frontend
+featured: false
+draft: false
+---
+
+
+To implement a dark and light theme toggle for a website using CSS, you can use the following steps:
+
+## Table of Contents
+
+## 1. **Define Theme Styles in CSS**
+
+Create styles for both light and dark themes. Use CSS variables (`--variable-name`) to make switching easier.
+
+```css
+/* Default (Light Theme) */
+:root {
+  --background-color: #ffffff;
+  --text-color: #000000;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --background-color: #000000;
+  --text-color: #ffffff;
+}
+
+/* Apply Variables */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+```
+
+
+
+## 2. **Add a Theme Toggle Button in HTML**
+
+Create a button for toggling between themes.
+
+```html
+<button id="theme-toggle">Toggle Theme</button>
+```
+
+
+
+## 3. **Write JavaScript for Theme Switching**
+
+Use JavaScript to toggle the theme by changing the `data-theme` attribute on the `<html>` element.
+
+```javascript
+const toggleButton = document.getElementById('theme-toggle');
+const currentTheme = localStorage.getItem('theme');
+
+// Apply the saved theme (if any) on page load
+if (currentTheme) {
+  document.documentElement.setAttribute('data-theme', currentTheme);
+}
+
+// Toggle theme on button click
+toggleButton.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme');
+  const newTheme = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', newTheme);
+
+  // Save the new theme in localStorage
+  localStorage.setItem('theme', newTheme);
+});
+```
+
+
+
+## 4. **Add Transition for Smooth Effects (Optional)**
+
+For a smooth user experience, ensure transitions are added in the CSS:
+
+```css
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+```
+
+
+## 5. **Test Your Implementation**
+
+- Save your work and test the button.
+- The theme should toggle between light and dark modes and persist after page reloads (thanks to `localStorage`).
