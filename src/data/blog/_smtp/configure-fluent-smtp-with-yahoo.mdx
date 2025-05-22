@@ -1,6 +1,6 @@
 ---
 author: Ibrahim Sharif
-pubDatetime: 2022-05-06 20:01:00
+pubDatetime: 2022-06-16 20:01:00
 modDatetime: null
 title: Configure Fluent SMTP with Yahoo
 description: A guide to configuring your Yahoo email with FluentSMTP for WordPress email delivery.
@@ -11,13 +11,16 @@ tags:
   - Yahoo
   - SMTP
   - Email Deliverability
-category: WordPress
+category: 
+  - WordPress
+  - Email
 featured: false
 draft: false
 ---
 
+Yahoo Mail is one of the most widely used email services, offering robust security and reliable delivery for both personal and professional communication. However, when it comes to integrating Yahoo with third-party platforms like WordPress, sending emails directly from your site can be challenging due to strict authentication requirements. Simple Mail Transfer Protocol (SMTP) bridges this gap by allowing WordPress to send emails securely through your Yahoo account. By configuring Fluent SMTP with Yahoo, you ensure that your website’s emails are delivered reliably, reducing the chances of messages being marked as spam or failing to send altogether.
 
-The goal of this tutorial is to send emails from WordPress using your Personal Yahoo Email **you_@yahoo.com_** by using the Fluent SMTP Plugin. If you have checked or reviewed my other article about [Configuring Gmail with Fluent SMTP](../configure-gmail-with-fluent-smtp/) you will find it easier to follow this guide.
+The goal of this tutorial is to send emails from WordPress using your Personal Yahoo Email **you_@yahoo.com_** by using the Fluent SMTP Plugin. If you have checked or reviewed my other article about [Configuring Gmail with Fluent SMTP](/posts/configure-gmail-with-fluent-smtp/) you will find it easier to follow this guide.
 
 ## Table of Contents
 
@@ -92,9 +95,9 @@ Now it's time to configure Fluent SMTP. Create a new SMTP Connection and the met
 ### Test the Connection
 
 Now it's time to test the connection if it's working or not! Go to Fluent SMTP > Email Test:  
-\-> Use the From as your Yahoo email is just configured.  
-\-> Send To where you want to receive the test email.  
-\-> HTML should be turned on to avoid suspicious activity by Spam Filters.
+1. Use the From as your Yahoo email is just configured.  
+2. Send To where you want to receive the test email.  
+3. HTML should be turned on to avoid suspicious activity by Spam Filters.
 
 ![Fluent SMTP test email sent successfully (generic screenshot)](@/assets/images/posts/fluentsmtp/fluent_smtp_gmail_test_sent_success.png)
 
@@ -104,9 +107,24 @@ Now click Send Test Email and check the destination Email Address.
 
 In this case, the test email is received and we are done configuring the Yahoo Email address to send WordPress emails using the Fluent SMTP Plugin.
 
-## Important Note
+## Things to Avoid When Configuring Fluent SMTP with Yahoo
 
-It is highly recommended to configure a cronjob replacing WordPress's Default PHP-based Cronjob to operate Email sending and other scheduled jobs smoothly.  
-Some hosting may not allow running a cronjob below 5 Minutes. But it is still better than a PHP-Based cronjob.
+When setting up Fluent SMTP with your Yahoo account, keep these common pitfalls in mind to ensure a smooth and secure configuration:
 
-Emails landing in Spam Folders depend on numerous factors including IP reputation, Domain reputation, and Email Body Content.
+1. **Using Your Regular Yahoo Password**  
+  Never use your main Yahoo account password in the SMTP settings. Always generate and use an app-specific password for enhanced security and to avoid authentication errors.
+
+2. **Incorrect SMTP Server or Port**  
+  Double-check that you are using the correct SMTP server (`smtp.mail.yahoo.com`) and port (`465` for SSL). Using the wrong server or port will prevent emails from being sent.
+
+3. **Disabling Encryption**  
+  Avoid disabling SSL/TLS encryption. Sending emails without encryption exposes your credentials and email content to potential interception.
+
+4. **Entering the Wrong Email Address**  
+  Make sure the "From Email" and "SMTP Username" fields match your actual Yahoo email address. Typos or mismatches can cause authentication failures.
+
+5. **Ignoring Firewall or Hosting Restrictions**  
+  Ensure that your hosting provider allows outbound connections on port 465. Some hosts block SMTP ports by default, which can block email delivery.
+
+6. **Leaving Simulation Mode Enabled**  
+  After testing, disable any simulation modes in Fluent SMTP to prevent sensitive information from being exposed in your logs.

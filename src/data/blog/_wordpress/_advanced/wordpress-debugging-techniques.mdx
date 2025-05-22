@@ -1,0 +1,325 @@
+---
+author: Ibrahim Sharif
+pubDatetime: 2020-07-19 16:40:00
+modDatetime: null
+title: Advanced WordPress Debugging Techniques
+description: How to guide on Advanced WordPress Debugging Techniques.
+tags:
+  - WordPress
+  - Debug
+  - Troubleshooting
+  - Development
+  - Issues
+category:
+  - WordPress
+  - Debug
+featured: false
+draft: false
+---
+
+
+Debugging is an essential skill for WordPress developers to diagnose and fix issues efficiently. Whether you’re dealing with plugin conflicts, performance bottlenecks, or PHP errors, understanding advanced debugging techniques can significantly speed up your workflow. This guide explores various tools and techniques to debug WordPress effectively.
+
+---
+
+## Table of Contents
+
+## 1. Enabling WordPress Debug Mode
+
+WordPress includes a built-in debugging mode that helps developers identify and resolve issues by logging errors, warnings, and notices. Enabling debug mode is especially useful during development and troubleshooting, as it provides detailed information about what’s happening behind the scenes.
+
+To enable debugging, open your `wp-config.php` file (located in the root of your WordPress installation) and add or update the following lines before the line that says `/* That's all, stop editing! Happy publishing. */`:
+
+- `WP_DEBUG`: Turns on the main debugging mode.
+- `WP_DEBUG_LOG`: Saves errors to a log file (`wp-content/debug.log`).
+- `WP_DEBUG_DISPLAY`: Controls whether errors are shown on the screen (set to `false` in production).
+- `SCRIPT_DEBUG`: Forces WordPress to use the non-minified versions of CSS and JS files for easier debugging.
+
+Example:
+
+```php
+// Enable debugging mode
+define('WP_DEBUG', true);
+
+// Log errors to a debug.log file
+define('WP_DEBUG_LOG', true);
+
+// Display errors on screen (set to false in production)
+define('WP_DEBUG_DISPLAY', false);
+@ini_set('display_errors', 0);
+
+// Enable debugging for scripts and styles
+define('SCRIPT_DEBUG', true);
+```
+
+The log file is stored at `wp-content/debug.log`, which can be monitored in real time with:
+
+```bash
+tail -f wp-content/debug.log
+```
+
+---
+
+## 2. Using WP-CLI for Debugging
+
+[WP-CLI](https://wp-cli.org/) is a powerful command-line interface for managing and debugging WordPress sites. It allows you to perform administrative tasks, inspect site status, and troubleshoot issues directly from the terminal—often faster and more efficiently than using the WordPress dashboard.
+
+Some useful WP-CLI debugging capabilities include:
+
+- Checking for core, plugin, and theme updates
+- Listing active/inactive plugins and themes
+- Inspecting and repairing the database
+- Flushing caches and deleting transients
+- Running custom queries to diagnose configuration issues
+
+WP-CLI is especially helpful for automating repetitive tasks, scripting site maintenance, and debugging problems on remote servers where you may not have access to the WordPress admin interface.
+
+### Check WordPress Site Status
+Use WP-CLI commands to quickly check the status of your WordPress installation, including available updates, active plugins, and theme status. This helps you identify outdated components or potential sources of issues without logging into the admin dashboard.
+
+```bash
+wp core check-update
+wp plugin list --status=active
+wp theme status
+```
+
+### Debug Database Issues
+
+WP-CLI provides commands to check, repair, and query the WordPress database directly from the terminal. These tools are invaluable for diagnosing database corruption, inspecting specific options, or running custom SQL queries without needing phpMyAdmin or similar tools.
+
+
+```bash
+wp db check
+wp db repair
+wp db query "SELECT * FROM wp_options WHERE option_name='siteurl'"
+```
+
+### Clear Cache and Transients
+
+Clearing the cache and deleting transients can help resolve issues caused by stale data or cached content. Use the following WP-CLI commands to flush the cache and remove all transients:
+
+
+```bash
+wp cache flush
+wp transient delete --all
+```
+
+---
+
+## 3. Debugging with Query Monitor Plugin
+
+[Query Monitor](https://wordpress.org/plugins/query-monitor/) is a powerful debugging plugin that provides insights into:
+- Database queries and slow queries
+- PHP errors and warnings
+- HTTP API requests
+- Hooks and actions execution
+
+To install it:
+```bash
+wp plugin install query-monitor --activate
+```
+
+Once installed, it adds a toolbar menu with debugging information for every page load.
+
+Query Monitor provides detailed reports on database queries, PHP errors, HTTP requests, hooks, and more, making it easier to identify performance bottlenecks and troubleshoot issues directly from the WordPress admin bar.
+
+{/* TODO: Screenshot */}
+
+---
+
+## 4. Tracking Slow Queries with Debug Bar and Debug Bar Extender
+This section provides guidance on monitoring and diagnosing slow database queries in WordPress using the Debug Bar and Debug Bar Extender plugins. It introduces the tools necessary for performance debugging and outlines the initial step of installing the Debug Bar plugin.
+
+To track slow database queries, install the **Debug Bar** plugin:
+
+```bash
+wp plugin install debug-bar --activate
+```
+
+To extend its capabilities, install **Debug Bar Extender**:
+```bash
+wp plugin install debug-bar-extender --activate
+```
+
+These tools provide detailed insights into database queries, including query execution times, affected tables, and potential bottlenecks. After activating both plugins, a new Debug menu appears in the WordPress admin bar. Here, you can view a breakdown of all database queries run during a page load, identify slow or problematic queries, and analyze how plugins or themes interact with the database. This information is invaluable for diagnosing performance issues and optimizing your WordPress site.
+
+{/* TODO: Screenshot */}
+
+---
+
+## 5. Using Xdebug for PHP Debugging
+
+[Xdebug](https://xdebug.org/) is a powerful PHP extension that enables step debugging, stack traces, profiling, and code coverage analysis. It allows you to set breakpoints, inspect variables, and trace code execution line by line within your IDE, making it invaluable for diagnosing complex issues that are difficult to track with simple logging.
+
+### Key Features of Xdebug
+
+- **Step Debugging:** Pause execution at breakpoints and inspect the call stack and variables.
+- **Stack Traces:** Get detailed stack traces for errors and exceptions.
+- **Profiling:** Analyze performance bottlenecks with profiling output compatible with tools like KCachegrind or Webgrind.
+- **Code Coverage:** Measure which lines of code are executed during tests.
+
+### Installation Overview
+
+To get started, install Xdebug using PECL or your system’s package manager. After installation, configure your `php.ini` to enable debugging and profiling features. Most modern IDEs (such as VS Code, PHPStorm, or NetBeans) support Xdebug integration, allowing you to debug WordPress code interactively.
+
+Please follow the official [Xdebug installation guide](https://xdebug.org/docs/install) for your specific environment.
+
+After installation, add this to `php.ini`:
+```ini
+zend_extension=xdebug.so
+xdebug.mode=debug,trace,profile
+xdebug.start_with_request=yes
+xdebug.client_host=127.0.0.1
+xdebug.client_port=9003
+```
+
+Use it with an IDE like **VS Code** or **PHPStorm** to set breakpoints and step through code execution.
+{/* TODO: Link to extended xdebug tutorial page. */}
+
+---
+
+## 6. Monitoring HTTP API Requests
+
+Monitoring HTTP API requests in WordPress is crucial for diagnosing issues with external services, REST API integrations, and remote data fetching. By tracking outgoing and incoming HTTP requests, developers can identify failed connections, slow responses, and unexpected payloads, ensuring reliable communication between WordPress and third-party APIs.
+
+To debug API requests, use:
+
+```php
+add_filter('http_api_debug', function($response, $type, $class, $args, $url) {
+    error_log("API Request: $url");
+    error_log(print_r($args, true));
+    error_log("Response: " . print_r($response, true));
+    return $response;
+}, 10, 5);
+```
+
+Alternatively, use **WP-CLI**:
+
+```bash
+wp transient get http_api_debug
+```
+
+---
+
+## 7. Debugging JavaScript and AJAX in WordPress
+
+Debugging JavaScript and AJAX in WordPress is essential for diagnosing issues with dynamic features, user interactions, and asynchronous data loading. This section covers practical techniques for identifying and resolving JavaScript errors, monitoring AJAX requests, and ensuring smooth communication between the browser and your WordPress backend.
+
+### Enable SCRIPT_DEBUG
+
+To enable debugging for JavaScript and CSS files, set `SCRIPT_DEBUG` to `true` in your `wp-config.php`. This forces WordPress to load the non-minified versions of scripts and styles, making it easier to identify issues.
+
+```php
+In `wp-config.php`:
+```php
+define('SCRIPT_DEBUG', true);
+```
+
+Debugging JavaScript and AJAX in WordPress involves a combination of browser-based tools and WordPress-specific techniques. By leveraging browser developer consoles, monitoring network activity, and using WordPress hooks, developers can efficiently identify and resolve issues related to scripts, AJAX handlers, and client-server communication for a smoother user experience.
+
+### Using Console Log for AJAX Debugging
+Using `console.log()` is a simple yet effective way to debug AJAX requests in WordPress. By logging the response and any errors to the browser console, you can quickly inspect the data returned from the server and identify issues with your AJAX calls.
+
+```
+
+### Debugging AJAX Requests in PHP
+```php
+add_action('wp_ajax_my_custom_action', function() {
+    error_log('AJAX triggered');
+    echo json_encode(['status' => 'success']);
+    wp_die();
+});
+```
+
+Use `tail -f wp-content/debug.log` to monitor logs.
+
+---
+
+## 8. Profiling Performance with P3 (Plugin Performance Profiler)
+
+Profiling plugin performance is crucial for maintaining a fast and responsive WordPress site. Over time, installing multiple plugins can lead to slow page loads and resource bottlenecks, making it difficult to pinpoint which plugins are causing issues. The P3 (Plugin Performance Profiler) plugin provides a simple way to analyze the impact of each plugin on your site’s performance. By generating detailed reports, it helps you identify slow or resource-intensive plugins so you can optimize or replace them as needed.
+
+**P3 Plugin Performance Profiler** helps identify slow plugins:
+```bash
+wp plugin install p3-profiler --activate
+```
+After activation, navigate to **Tools > P3 Profiler** to analyze performance.
+{/* TODO: Screenshot */}
+
+---
+
+## 9. Debugging WordPress Hooks and Actions
+
+Debugging hooks and actions is essential for understanding how WordPress executes custom code and manages plugin or theme interactions. Hooks—both actions and filters—allow developers to modify or extend WordPress functionality without altering core files. When issues arise, tracking which hooks are triggered and in what order can help pinpoint conflicts, unexpected behavior, or performance bottlenecks. This section covers practical methods for monitoring, logging, and troubleshooting hooks and actions to streamline your debugging process.
+
+Use the `do_action()` and `apply_filters()` functions to track execution flow. For example:
+```php
+add_action('init', function() {
+    error_log('Init hook triggered');
+});
+```
+
+To log all hooks, add:
+```php
+global $wp_filter;
+error_log(print_r($wp_filter, true));
+```
+
+---
+
+## 10. Checking File and Folder Permissions
+
+File and folder permissions are critical for WordPress security and functionality. Incorrect permissions can prevent file uploads, plugin installations, or even cause security vulnerabilities. To check and set the correct permissions, use the following commands:
+
+- **Check current permissions** for the uploads directory:
+    ```bash
+    ls -la wp-content/uploads
+    ```
+
+- **Set recommended permissions**:
+    - Directories should be `755` (read/write/execute for owner, read/execute for group and others).
+    - Files should be `644` (read/write for owner, read for group and others).
+
+    Run these commands from your WordPress root directory:
+    ```bash
+    find . -type d -exec chmod 755 {} \;
+    find . -type f -exec chmod 644 {} \;
+    ```
+
+- **Check ownership**: Files should typically be owned by the web server user (e.g., `www-data` for Apache/Nginx on Ubuntu). To reset ownership:
+    ```bash
+    chown -R www-data:www-data /var/www/html/
+    ```
+
+If you continue to experience permission issues, consult your hosting provider or server administrator to ensure your environment is configured securely and correctly.
+
+
+---
+
+## Summary & Best Practices
+
+Mastering advanced debugging techniques in WordPress empowers developers to quickly diagnose and resolve issues, leading to more stable and performant sites. Here’s a concise recap of the strategies covered:
+
+- **Enable `WP_DEBUG`** for comprehensive error logging.
+- **Leverage WP-CLI** for efficient command-line troubleshooting and automation.
+- **Install Query Monitor and Debug Bar** for real-time insights into queries, hooks, and errors.
+- **Utilize Xdebug** for interactive step-through PHP debugging and profiling.
+- **Monitor HTTP API requests and AJAX calls** to ensure reliable external integrations.
+- **Profile plugin performance** with tools like P3 Profiler to identify bottlenecks.
+- **Track hooks and actions** using logging to pinpoint conflicts and execution order.
+- **Verify file and folder permissions** to maintain security and functionality.
+
+By systematically applying these techniques, you’ll streamline your debugging workflow, minimize downtime, and maintain a robust WordPress environment.
+
+---
+
+## Further Reading
+
+- [WordPress Debugging Guide](https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/)
+- [Xdebug Documentation](https://xdebug.org/docs/)
+- [Query Monitor Plugin](https://wordpress.org/plugins/query-monitor/)
+- [WP-CLI Documentation](https://wp-cli.org/)
+- [P3 Plugin Performance Profiler](https://wordpress.org/plugins/p3-plugin-performance-profiler/)
+- [Debugging AJAX in WordPress](https://developer.wordpress.org/plugins/javascript/ajax/)
+- [Debugging Hooks and Actions](https://developer.wordpress.org/plugins/hooks/)
+- [WordPress File Permissions](https://wordpress.org/support/article/changing-file-permissions/)

@@ -1,0 +1,222 @@
+---
+author: Ibrahim Sharif
+pubDatetime: 2019-11-03 14:30:00
+modDatetime: null
+title: "The Anatomy of a WordPress Theme: Understanding Template Hierarchy"
+description: This guide is to give you an idea of the WordPress Theme Hierarchy.
+tags:
+  - WordPress
+  - Theme
+  - Template Hierarchy
+  - Tutorial
+  - Guide
+category:
+  - WordPress
+featured: false
+draft: true
+---
+
+WordPress themes control the appearance and structure of a website. To create or modify a theme effectively, you need to understand **WordPress template hierarchy**. This hierarchy determines which template file is used to display content, making it crucial for theme developers.
+
+In this article, we will explore the WordPress template hierarchy with detailed explanations, code snippets, and visual illustrations.
+
+---
+
+## Table of Contents
+
+## **1. What is WordPress Template Hierarchy?**
+
+Template hierarchy is a systematic order in which WordPress looks for template files when displaying a page. It follows a predefined logic, allowing developers to customize specific sections of a site efficiently.
+
+WordPress starts from the most specific template and moves to more general ones. For example, if a single post has a specific template, it will be used; otherwise, WordPress will fall back to a broader template.
+
+Here's a basic flow:
+
+- WordPress checks for a specific template file.
+- If unavailable, it moves to a more general template.
+- It continues until it finds an appropriate file, ultimately defaulting to `index.php`.
+
+---
+
+## **2. The WordPress Template Hierarchy Chart**
+
+The following diagram illustrates the template hierarchy:
+
+```
+index.php
+├── front-page.php
+├── home.php
+├── single.php
+│   ├── single-{post-type}.php
+│   └── single-{slug}.php
+├── page.php
+│   └── page-{slug}.php
+├── category.php
+│   └── category-{slug}.php
+├── archive.php
+├── search.php
+├── 404.php
+└── attachment.php
+```
+
+This chart visually represents how WordPress determines which template to use.
+
+---
+
+## **3. Common Template Files and Their Usage**
+
+### **3.1. Global Template File (`index.php`)**
+The `index.php` file is the fallback for all requests. If no other template file is found, WordPress uses `index.php`.
+
+```php
+<?php get_header(); ?>
+
+<h1><?php bloginfo('name'); ?></h1>
+
+<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
+    <h2><?php the_title(); ?></h2>
+    <p><?php the_content(); ?></p>
+<?php endwhile; else : ?>
+    <p>No content found</p>
+<?php endif; ?>
+
+<?php get_footer(); ?>
+```
+
+### **3.2. The Homepage (`front-page.php` or `home.php`)**
+- `front-page.php` is used when a static front page is set in WordPress settings.
+- If no `front-page.php` exists, WordPress falls back to `home.php`.
+
+```php
+<?php get_header(); ?>
+
+<h1>Welcome to My Website</h1>
+<p>This is the homepage.</p>
+
+<?php get_footer(); ?>
+```
+
+### **3.3. Single Post (`single.php`)**
+- Used for individual blog posts.
+- Can be extended using `single-{post-type}.php`.
+
+```php
+<?php get_header(); ?>
+
+<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
+    <h1><?php the_title(); ?></h1>
+    <p><?php the_content(); ?></p>
+<?php endwhile; endif; ?>
+
+<?php get_footer(); ?>
+```
+
+### **3.4. Pages (`page.php`)**
+- Used for static pages like "About Us".
+- Can be customized with `page-{slug}.php`.
+
+```php
+<?php get_header(); ?>
+
+<h1><?php the_title(); ?></h1>
+<div><?php the_content(); ?></div>
+
+<?php get_footer(); ?>
+```
+
+### **3.5. Category Archive (`category.php`)**
+- Displays posts from a specific category.
+
+```php
+<?php get_header(); ?>
+
+<h1>Category: <?php single_cat_title(); ?></h1>
+<ul>
+    <?php while (have_posts()) : the_post(); ?>
+        <li><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></li>
+    <?php endwhile; ?>
+</ul>
+
+<?php get_footer(); ?>
+```
+
+### **3.6. Search Results (`search.php`)**
+- Displays search results when a user searches on the site.
+
+```php
+<?php get_header(); ?>
+
+<h1>Search Results for: <?php echo get_search_query(); ?></h1>
+<ul>
+    <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
+        <li><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></li>
+    <?php endwhile; else : ?>
+        <p>No results found.</p>
+    <?php endif; ?>
+</ul>
+
+<?php get_footer(); ?>
+```
+
+### **3.7. 404 Error Page (`404.php`)**
+- Used when a requested page is not found.
+
+```php
+<?php get_header(); ?>
+
+<h1>Page Not Found (404)</h1>
+<p>Sorry, the page you are looking for does not exist.</p>
+
+<?php get_footer(); ?>
+```
+
+---
+
+## **4. Customizing the Template Hierarchy**
+
+### **4.1. Creating Custom Post Type Templates**
+To create a custom post type template:
+1. Register a custom post type in `functions.php`:
+
+```php
+function custom_post_type() {
+    register_post_type('portfolio', [
+        'labels' => [
+            'name' => __('Portfolio'),
+            'singular_name' => __('Portfolio Item')
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'supports' => ['title', 'editor', 'thumbnail']
+    ]);
+}
+add_action('init', 'custom_post_type');
+```
+
+2. Create `single-portfolio.php` for portfolio items.
+
+```php
+<?php get_header(); ?>
+<h1><?php the_title(); ?></h1>
+<?php the_content(); ?>
+<?php get_footer(); ?>
+```
+
+---
+
+## **5. Conclusion**
+Understanding WordPress template hierarchy allows developers to control and customize how content is displayed. By leveraging different template files, you can create a fully customized WordPress theme.
+
+This guide covered:
+- How WordPress selects templates.
+- Common template files and their usage.
+- Creating custom templates for different content types.
+
+By mastering template hierarchy, you can build more flexible and efficient WordPress themes!
+
+---
+
+### **Further Reading**
+- [WordPress Template Hierarchy Docs](https://developer.wordpress.org/themes/basics/template-hierarchy/)
+- [Building Custom WordPress Themes](https://developer.wordpress.org/themes/)
+

@@ -13,13 +13,18 @@ tags:
   - Roundcube
   - SMTP
   - Email Deliverability
-category: WordPress
+category: 
+  - WordPress
+  - Hosting
+  - Email
 featured: true
 draft: false
 ---
 
-cPanel is the most popular and widely used control panel for web hosting on the web. cPanel uses Postfix and Exim to receive and as a Mail Transfer Agent.  
-The goal of this tutorial is to send emails from WordPress using your Personal Domain Email **you@yourdomain.com** by using the Fluent SMTP Plugin. If you have checked or reviewed my other article about [Configuring Gmail with Fluent SMTP](../configure-gmail-with-fluent-smtp/) you will find it easier to follow this guide.
+cPanel is a widely used web hosting control panel that provides a user-friendly interface for managing websites, domains, and email accounts. One of its key features is Webmail, which allows users to access their email accounts directly from a browser using clients like Roundcube. To ensure reliable email delivery from your WordPress site, it's essential to configure SMTP (Simple Mail Transfer Protocol), which handles the sending of emails through authenticated servers. By integrating cPanel Webmail with an SMTP plugin like Fluent SMTP, you can improve email deliverability, reduce the chances of emails landing in spam, and maintain better control over your outgoing messages.
+
+ 
+The goal of this tutorial is to send emails from WordPress using your Personal Domain Email **you@yourdomain.com** by using the Fluent SMTP Plugin. If you have checked or reviewed my other article about [Configuring Gmail with Fluent SMTP](/posts/configure-gmail-with-fluent-smtp/) you will find it easier to follow this guide.
 
 ## Table of Contents
 
@@ -49,7 +54,7 @@ In order to proceed, there are a few things that are needed beforehand to config
 ### Check Emails from Roundcube Email Client
 
 Let's assume our target Email Address to be configured is **ibrahim@ibrahim.com**.  
-Go to **Email** \> **Email Accounts**
+Go to `Email => Email Accounts`
 
 ![cPanel email dashboard showing email accounts](@/assets/images/posts/fluentsmtp/cpanel_email_dashboard-shuvoaftab.png)
 
@@ -97,9 +102,9 @@ If your Domain has a mail.domain.com DNS published according to the cPanel Zone,
 ### Test the Connection
 
 Now it's time to test the connection if it's working or not! Go to Fluent SMTP > Email Test:  
-\-> Use the From as your cPanel webmail email just configured.  
-\-> Send To where you want to receive the test email.  
-\-> HTML should be turned on to avoid suspicious activity by Spam Filters.
+1. Use the **From** as your cPanel webmail email just configured.  
+2. **Send To** where you want to receive the test email.  
+3. **HTML** should be turned on to avoid suspicious activity by Spam Filters.
 
 ![Fluent SMTP email test sent successfully](@/assets/images/posts/fluentsmtp/Fluent_SMTP_email_test_successfully_sent.png)
 
@@ -127,3 +132,26 @@ It is highly recommended to configure a cronjob replacing WordPress's Default PH
 Some hosting may not allow running a cronjob below 5 Minutes. But it is still better than a PHP-Based cronjob.
 
 Emails landing in Spam Folders depend on numerous factors including IP reputation, Domain reputation, and Email Body Content.
+
+## Frequently Asked Questions (FAQ)
+
+- **Can I use any email address created in cPanel with Fluent SMTP?**  
+  Yes, you can use any email address created in your cPanel account with Fluent SMTP, as long as you have the correct SMTP credentials and access permissions.
+
+- **What SMTP port should I use for the best deliverability?**  
+  Port 465 (SSL) or 587 (TLS) are generally recommended for secure email delivery. However, the available ports may vary depending on your hosting provider, so check your cPanel's "Connect Devices" page for the correct settings.
+
+- **Why are my emails still going to spam after configuring SMTP?**  
+  Emails may land in spam due to factors like IP reputation, domain reputation, or the content of your emails. Proper SMTP configuration helps, but you should also ensure your domain has proper DNS records (SPF, DKIM, DMARC) and avoid spammy content.
+
+- **What should I do if the SMTP Host (mail.domain.com) doesn't work?**  
+  If using your domain as the SMTP Host doesn't work, check the "All Headers" of a received email to find the actual server hostname, or use the hostname provided in cPanel's "Connect Devices" section.
+
+- **Is it safe to store my SMTP password in Fluent SMTP?**  
+  Fluent SMTP stores your credentials securely in the WordPress database. For added security, ensure your website and database are properly protected and use strong, unique passwords.
+
+- **Do I need to disable WordPress's default PHP mail function?**  
+  Fluent SMTP automatically overrides the default PHP mail function when configured. However, for better reliability, consider setting up a server-side cron job instead of relying on WordPress's built-in cron.
+
+- **Can I use this setup with other SMTP plugins?**  
+  Yes, the SMTP details provided by cPanel can be used with other SMTP plugins for WordPress, but the setup steps may differ slightly depending on the plugin.

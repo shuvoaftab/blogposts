@@ -1,0 +1,258 @@
+---
+author: Ibrahim Sharif
+pubDatetime: 2020-02-20 13:00:00
+modDatetime: null
+title: "How to Change WordPress Login URL for Better Security"
+description: "Hide your wp-login URL and add a layer of protection to your WordPress login page."
+tags:
+  - Cron Job
+  - WordPress
+  - Server
+  - telefy
+  - Telegram
+  - npm
+category:
+  - WordPress
+  - Security
+featured: false
+draft: false
+---
+
+
+Changing your WordPress login URL is like adding an extra padlock to your site’s door. By default, WordPress uses **`/wp-admin`** or **`/wp-login.php`** as the login page. This makes it *easy* for bots and hackers to find and repeatedly hammer on that door. In fact, a study by Perfmatters found that many sites see **10,000+ failed login attempts per day** at the default login URL. 
+
+By moving the login page to a unique, **obscure path**, you make your site much harder to find by automated scanners. This simple change can dramatically reduce brute-force attacks and even improve performance by cutting out unwanted bot traffic. Below we’ll explain **what** this means, **why** it helps, **when** and **who** should do it, and exactly **how** to do it—whether you prefer a one-click plugin solution or hands-on manual tweaks.
+
+---
+
+## Table of Contents
+
+## WordPress Login URL Overview
+
+Every WordPress site has a built‑in login page, typically located at `https://yourdomain.com/wp-login.php` (or `https://yourdomain.com/wp-admin/`, which redirects to `wp-login.php`). This page is the front door to your site’s dashboard. 
+
+In multisite setups or subdirectory installs, the URL may vary slightly (e.g. `yourdomain.com/wordpress/wp-login.php`), but it always follows the default pattern. In short, the **login URL** is the address where site admins enter their username and password to log in. If you’ve never changed it, it’s almost certainly one of the standard paths above.
+
+### Why Change the WordPress Login URL?
+
+The main reason is **security**. By keeping the default URL, you’re telling the world exactly where to find your site’s login form. Hackers know this too: they use automated scripts that scan IP ranges looking for `wp-login.php` pages to attack. Changing the login URL adds a layer of obscurity that stops many low-level attacks. As one guide puts it, hiding the login page can “vastly increase the security of your site, especially from brute force attacks”. In other words, you make it harder for careless hackers to even *find* your login page to begin attacking it.
+
+That said, it’s **not a silver bullet**. Security experts caution that renaming your login URL is essentially “security through obscurity” and won’t stop a determined attacker on its own. Wordfence and iThemes both note that hiding the login page isn’t bulletproof. For example, attackers might try to guess your custom URL or use other WordPress entry points (like the REST API or XML-RPC). However, it **does** eliminate most automated bot traffic, and when combined with other measures (strong passwords, 2FA, firewalls, etc.), it makes your site significantly more resilient. In short, changing the login URL **helps reduce noise and risk**, even if you still need to defend against attacks elsewhere.
+
+### When Should You Change Your Login URL?
+
+Ideally, right from the start, when you first set up your WordPress site. If you’re building a new site, make changing the login URL part of your initial security setup. For existing sites, you can do it anytime – immediately after installing a security plugin or if you notice suspicious login attempts in your logs. Many site owners wait until **after** hardening passwords and installing basic security, then add this as an additional lock.
+
+If your site has already been under attack, it’s even more urgent. Seeing hundreds of daily login attempts (as Patchstack reports, about *300 attempts per day* even on small blogs) is a clear sign to move your login page. Ultimately, **any time is a good time** to change it, as long as you take care not to lock yourself out (see Warnings below).
+
+### Who Should Change the Login URL?
+
+**Anyone** running a WordPress site can benefit from this change. But it’s especially useful for:
+
+* **Bloggers and Small Business Owners:** Even if you’re not a developer, using a plugin like WPS Hide Login makes this a one-click improvement. It cuts down on the constant background spam of failed login attempts.
+* **Agencies and Managers:** If you run multiple sites or manage client sites, customizing the login URL for each site can be part of your security best practices. It also lets you easily brand or distinguish client portals.
+* **Developers and Techies:** If you’re comfortable with code, changing the login URL gives you fine-grained control. You might do it on custom or staging sites to keep them hidden from public scans. It’s also handy during development or pen-testing.
+* **Multisite Admins:** In a WordPress multisite network, each site’s login is still at `wp-login.php`, so network admins can customize each site’s login URL separately to avoid conflicts and confusion.
+
+In short, *every* WordPress user benefits from one more security layer. As Sucuri notes, customizing your login URL is “an excellent step towards deterring potential attacks”. Just remember that this is only part of a full security plan – you should still use strong credentials and consider 2FA or other measures.
+
+### Where Is the WordPress Login URL?
+
+By default, the WordPress login URL lives in your site’s root directory. That means if your WordPress is installed at the domain root, it’s at `https://yourdomain.com/wp-login.php`. If WordPress is in a subfolder (say `https://yourdomain.com/blog/`), then the login would be `https://yourdomain.com/blog/wp-login.php`. On a WordPress multisite, the main site’s login is still at `/wp-login.php`, while subsites’ logins can sometimes appear as `example.com/site1/wp-login.php`.
+
+Hosts or security plugins sometimes **change the login URL for you by default**. For example, managed WordPress hosts may include a one-click login or even automatically hide `wp-login.php`. If that’s the case, your host will usually provide a link to the login in their dashboard. Otherwise, assume it’s the default path if you haven’t altered it.
+
+### How Does Changing the Login URL Work?
+
+There are two main approaches: **using a plugin** or **manual code changes**. A plugin typically “intercepts” requests to the old URL and either disables them or redirects them elsewhere. It essentially tells WordPress, “ignore the default wp-login.php; use this new path.” On the other hand, a manual method might involve copying/renaming core files and adding WordPress filters (PHP code hooks) to point all login, logout, and lost-password functions to your new file. In both cases, the goal is to make `wp-login.php` (and `/wp-admin`) inaccessible unless the user is using your new custom URL. The old URLs will usually return a 404 error or redirect to your homepage, thwarting bots.
+
+Below, in the step-by-step guide, we’ll cover the exact steps for both methods: the plugin way (no coding needed) and the manual way (with code snippets). But first, let’s look at some **real-world examples** of how this change helps different people.
+
+---
+
+## Step-by-Step Guide: Changing the Login URL
+
+Changing your WordPress login URL is a straightforward process that can be accomplished in just a few steps. Whether you prefer using a plugin or making manual changes, the following guide will walk you through both methods. Choose the approach that best fits your technical comfort level and site requirements.
+
+### Using a Plugin
+
+The easiest way to change your login URL is with a plugin. Plugins handle the heavy lifting and let you do it without touching code. We’ll cover **WPS Hide Login**, **iThemes Security** (Hide Backend), and **WP Cerber Security** as examples. (All of these plugins have free versions that support login renaming.)
+
+#### WPS Hide Login
+
+WPS Hide Login is a lightweight, very popular plugin (over 1 million installations) that does one thing: change your login page URL.
+
+1. In your WordPress dashboard, go to **Plugins > Add New**. Search for **“WPS Hide Login”** and install/activate it.
+2. After activation, go to **Settings > General**. Scroll down, and you will find a **“WPS Hide Login”** section near the bottom.
+3. In the **“Login URL”** field, enter the new path you want (for example, `my-secret-login`). This will make your login page `https://yourdomain.com/my-secret-login` instead of `wp-login.php`.
+4. Optionally, set a **Redirection URL**: a page where users will be sent if they try to access the old `wp-login.php` or `/wp-admin` without the new path. Commonly this is set to a 404 page or your homepage.
+5. **Save Changes**.
+
+That’s it! From now on, only the new URL will work. **Important:** make sure you bookmark or remember the new login URL, because with WPS Hide Login active, the old `/wp-admin` and `/wp-login.php` **will not work at all**. If you deactivate WPS Hide Login later, WordPress will revert to the default login URLs automatically, so you won’t lose anything permanently.
+
+#### iThemes Security (Hide Backend)
+
+The iThemes Security plugin (formerly “Better WP Security”) includes a “Hide Backend” feature that accomplishes the same thing. It’s part of a larger security plugin, but you can enable just this feature.
+
+1. Install and activate **iThemes Security**.
+2. In your admin menu, go to **Security > Settings** and click on the **“Advanced”** tab.
+3. Find the **“Hide Backend”** section. Check the box to enable it.
+4. You’ll see fields appear. In the **Login Slug** field, type your new login path (e.g. `site-login`). This makes your login page `https://yourdomain.com/site-login`.
+5. Optionally configure redirections (keep defaults or set as desired).
+6. Save your settings.
+
+After this, iThemes will block any access to `wp-login.php` or `/wp-admin` (unless already logged in), and only the slug you chose will work. A word of caution: *write down your slug!* If you forget it, you won’t be able to log in. As one tutorial warns, if you “forget what you set in the Login Slug field, you will not be able to log into your WordPress admin dashboard”. So bookmark it or save it securely.
+
+Successfully hiding your login via iThemes gives the same benefit as WPS Hide Login: a custom, hard-to-guess URL that cuts out the default login path.
+
+#### WP Cerber Security (Custom Login Page)
+
+WP Cerber is a comprehensive security plugin that also offers a login-hiding feature. Here’s how to use its **Custom Login Page** tool:
+
+1. Install and activate **WP Cerber Security**.
+2. In the WordPress dashboard, go to **WP Cerber > Main Settings**.
+3. Scroll to the **Custom Login Page** section. Enter your desired new login path (for example, `secure-login`) into the **Custom login URL** field.
+4. Click **Save**.
+
+Cerber will now route all legitimate logins through `https://yourdomain.com/secure-login` and block the old URL. It even provides options like **“Block access to wp-login.php”**, which makes any attempt to visit `wp-login.php` return a 404 error. (This is an extra safety measure so bots get a dead end.)
+
+After changing the URL, Cerber advises you to **test** the new login link immediately (ideally in a private/incognito browser) and not log out until you confirm it works. If you have caching on your site, be sure to add the new login URL to your cache exclusion list so that it isn’t accidentally cached.
+
+With any of these plugins, if something goes wrong (say you forget the new URL or a plugin conflict arises), you can always disable the plugin via FTP. For example, Jetpack’s documentation explains that if you ever get locked out, you can rename or delete the plugin’s folder using FTP to deactivate it. That will revert your login URL back to the default, letting you log in again.
+
+### Manual Method (No Plugin)
+
+If you prefer not to use a plugin, you can change the login URL by editing files yourself. This is more advanced and riskier, but it works. **WARNING:** Always back up your site before editing core files! Ideally, do this on a child theme or test site first. WordPress updates can overwrite any direct changes to core files, so understand that you’ll have to redo this after an update unless you’re using a child theme.
+
+Here’s the general process to rename the login page manually:
+
+1. **Backup `wp-login.php`.** Copy the `wp-login.php` file from your WordPress root directory to a safe place on your computer.
+
+2. **Rename the login file.** Using your text editor’s search-and-replace, open the backup copy of `wp-login.php` and replace *every* occurrence of `wp-login.php` in the code with your new filename (for example, `my-login.php`). Save the file and **name it exactly what you chose** (e.g. `my-login.php`).
+
+3. **Upload the new login file.** Place your renamed file (e.g. `my-login.php`) in the WordPress root (same folder as `wp-login.php` was). Set its file permissions to 644 or 640 so it can execute properly.
+
+4. **Edit your theme’s `functions.php`.** In your active (child) theme’s directory, open `functions.php`. Before the final `?>` tag (or anywhere appropriate), add these filters:
+
+   ```php
+   // Change the login URL to our new login file
+   add_filter('login_url', 'custom_login_url', 10, 3);
+   function custom_login_url($login_url, $redirect, $force_reauth) {
+       return site_url('my-login.php', 'login');
+   }
+
+   // Update the logout URL to use the new login page
+   add_filter('logout_url', 'custom_logout_url', 10, 2);
+   function custom_logout_url($logout_url) {
+       return home_url('/my-login.php');
+   }
+
+   // Update the lost password link to use the new login page
+   add_filter('lostpassword_url', 'custom_lostpassword_url', 10, 2);
+   function custom_lostpassword_url($lostpassword_url) {
+       return home_url('/my-login.php?action=lostpassword');
+   }
+   ```
+
+   *(Replace **`my-login.php`** with whatever filename you chose.)*
+
+5. **Test the new login URL.** Open a new incognito/private window and go to `https://yourdomain.com/my-login.php`. The normal WordPress login form should appear. Log in to make sure it works.
+
+6. **Delete the old `wp-login.php`.** Once you’ve confirmed your new URL works, you can safely delete (or move) the original `wp-login.php` file from your server. Now only the new file handles logins.
+
+By doing this, you’ve effectively “renamed” the login page and told WordPress (via the `login_url` filter) to use the new path. Note that if you update WordPress core, the original `wp-login.php` may be restored, and you would have to repeat the steps or rely on the filters again. That’s why using a child theme and only editing the new login file (plus filters) is recommended.
+
+Manual change **works** without a plugin, but it’s easy to make a mistake. If your new login page stops working (for example, after an update), WordPress will fall back to the default `wp-login.php`. You can then either redo the edits or temporarily rename your plugin (if you used one) via FTP. Jetpack’s guide on this warns that breaking the manual setup usually means using FTP to disable the changes and restore access. Always keep the default `wp-login.php` file as a backup in case you need to restore it.
+
+---
+
+## Real-World Use Cases
+
+Consider a blogger like Jane who runs a small cooking blog. Every morning she wakes up to dozens of notifications about failed logins at `/wp-admin`. By changing her login URL to something unique (like `/kitchen-entry`), those spammy attempts stop immediately. As one security pro explained, using a custom login slug **“makes your site’s login page uniquely yours”**, so generic bots can’t find it easily. Jane’s traffic stays the same, but her server logs are much cleaner.
+
+An **agency** managing multiple sites does something similar: each client site gets its own custom admin path as part of onboarding. This adds to the client’s security and is easy to remember (for example, appending `/clientname-admin`). In competitive environments, showing clients that their site has a hidden admin URL can also be a selling point.
+
+**Developers** benefit too. When building sites on a development server (often accessible publicly), changing the login page name prevents search engines or collaborators from discovering the default path. It’s also great when handing off a site to a client; you can give them the custom URL and lock down the defaults, reducing the chance that random hackers find the admin login.
+
+In all these cases, the benefit is the same: *fewer random login attempts.* As Patchstack notes, even a small blog sees \~300 login attempts per day. After hiding the login URL, those automated attacks have nothing to hit. In practice, many site owners see their “failed login” emails and alerts drop drastically. Combined with other security layers, changing the login URL is a low-effort tweak with noticeable results for bloggers, developers, and agencies alike.
+
+---
+
+## Plugin vs Manual: Pros and Cons
+
+| Method                                      | Pros                                                                                                                        | Cons                                                                                                                        |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| **Plugin (e.g. WPS Hide, iThemes, Cerber)** | - Easy setup (no coding) <br/> - Safer for non-technical users <br/> - Reverts cleanly if deactivated <br/> - Update-proof  | - Adds a plugin dependency <br/> - Possible plugin/theme conflicts <br/> - Must remember new login slug <br/> - Some plugins require payment for advanced features |
+| **Manual (code edits)**                     | - No extra plugin needed <br/> - Works even if plugins are disabled <br/> - Highly flexible                                | - Risky for non-developers <br/> - Can break site if done incorrectly <br/> - Changes may be lost after WordPress updates <br/> - Easy to lock yourself out if not careful |
+
+Both methods achieve the goal, but security guides generally recommend plugins for simplicity. As Jetpack puts it, using a plugin is “easier and safer”, since manually editing core files risks breaking things. Plugin methods are essentially reversible and update-proof, whereas manual methods require more maintenance. Choose what fits your skill level and site needs: plugins are great for most users, while manual tweaks are for those who want full control and understand the caveats.
+
+---
+
+## Warnings and Common Mistakes to Avoid
+
+* **Don’t Forget Your New URL!** The biggest mistake is simply forgetting what you set as the new login slug. Once changed, **the old URL no longer works**. If you lose track of the new address, you’ll be locked out of your own site. As one iThemes tutorial bluntly warns: if you forget the Login Slug, “you will not be able to log into your WordPress admin dashboard”. Always bookmark or securely note down the new path immediately after changing it.
+
+* **Keep a Backup of wp-login.php:** Whether using a plugin or manual method, keep a copy of the original `wp-login.php` somewhere safe (or at least know how to get it from the WordPress download). If something goes wrong (plugin conflict, typo in code), you can restore the default login page and get back in.
+
+* **Test Before Logging Out:** Especially with manual changes, test your new login URL in an incognito/private browser window **before** logging out of your current session. This ensures the new page works as expected. WP Cerber explicitly advises doing this to avoid accidentally locking yourself out.
+
+* **Exclude from Caching:** If you use a caching plugin, add your new login URL to the “do not cache” list. Serving a cached login page can cause errors or unexpected behavior. For example, WP Cerber’s guide points out that you should exclude the custom login page from caching to keep it working correctly.
+
+* **Be Careful with Firewall Rules:** If you have other security/firewall rules (like Cloudflare page rules or custom .htaccess), make sure they allow access to your new login URL. Sometimes strict rules on `/wp-admin/` could block your new path.
+
+* **Beware Theme/Plugin Conflicts:** Some plugins (like Elementor’s maintenance mode, or other login customizers) may not play nicely with a hidden login URL. If you change the slug and suddenly some features break, try disabling the login-hiding plugin to see if it’s the culprit.
+
+* **Check Multi-site Settings:** On WordPress multisite, hiding the login requires extra care. A network install has a central login, so changing one site’s login might not work as expected. Use a network-aware plugin or ensure you apply changes at the network level.
+
+* **Wrong Code in Manual Mode:** If you edit code, a simple typo in the function or filter can bring down the login completely. Follow guides carefully. Fortunately, if your admin breaks, you can always disable the custom code by FTP (e.g. by renaming the plugin folder or removing the filter from functions.php).
+
+In short, changing the login URL is powerful but must be done carefully. Keep backups, test thoroughly, and have a recovery plan (like FTP access) just in case. Many “How to fix locked out” guides note that simply **deactivating the plugin** (via FTP) will restore the default login URL, which is a lifesaver if you find yourself locked out.
+
+---
+
+## Comparison with Other Security Techniques
+
+Changing the login URL is just one part of a security strategy. Here’s how it stacks up with some alternatives:
+
+* **Two-Factor Authentication (2FA):** This is one of the strongest login protections. With 2FA (using an authenticator app or SMS code), users need a second verification step to log in. Even if someone guesses the password, they can’t access the site without the second factor. Jetpack and security experts highly recommend enabling 2FA on WordPress whenever possible. Unlike login-hiding, 2FA doesn’t rely on obscurity – it **proves** who you are. Combining both methods gives maximum benefit: hide your login page *and* require a 2FA code on that hidden page.
+
+* **CAPTCHA / reCAPTCHA:** These tools add a puzzle (like selecting pictures or solving a math problem) to the login form to block bots. They are effective at stopping simple automated attacks but can annoy legitimate users. Google reCAPTCHA v2/v3 plugins are available for WordPress. CAPTCHAs protect the *form itself*, whereas changing the login URL protects the *location* of the form. Using both is often done: an attacker who somehow finds your hidden login page would still have to solve a CAPTCHA.
+
+* **Limit Login Attempts:** Many security plugins (e.g. Wordfence, Limit Login Attempts Reloaded) will block an IP after a certain number of failed logins. This defends against brute force on the login endpoint. Changing the URL complements this: if a bot hits `/wp-login.php`, there’s nothing there to attempt. If an attacker finds the new URL, limiting attempts will still stop them after a few failures.
+
+* **IP Whitelisting / .htaccess:** Some admins add `.htaccess` rules to block everyone from `/wp-admin` except certain IPs. This is very secure if you have static IP addresses, but impractical for most. Changing the login URL is easier and more flexible while still acting as a gatekeeper.
+
+In summary, hiding the login page is **not a replacement** for good security practices – it should be used **alongside** them. Strong passwords, 2FA, HTTPS encryption, up-to-date plugins, firewalls and anti-malware scans are all critical. WordPress itself emphasizes that changing the URL is optional “customizable” step, but having 2FA and strong credentials is fundamental. Think of login URL renaming as one **extra layer** in a security stack.
+
+---
+
+## Benefits and Key Takeaways
+
+* **Drastically fewer random attacks:** On a typical WordPress site, bots constantly try `wp-login.php`. Changing the URL means those scripts have nothing to find, which often cuts failed login attempts nearly to zero.
+* **Improved performance:** As Perfmatters notes, hiding the login URL “decreases bots scraping common areas of your site,” which can slightly improve site performance and reduce server load.
+* **Plug-and-play security:** With plugins like WPS Hide Login or iThemes Security, it takes only a minute to secure the login page with no coding needed.
+* **Reversible and low-risk:** If something goes wrong, deactivating the plugin or uploading the original `wp-login.php` brings you back to the default state. Plugins like WPS Hide guarantee a clean revert.
+* **Part of a layered approach:** Remember, this is **not a cure-all**. Changing the login URL is a form of security through obscurity – it deters many attacks but won’t stop everything. Use it in combination with strong passwords, 2FA, and other best practices.
+
+**Key tip:** Always keep a note of your new login URL and test it before logging out. If done correctly, changing your login URL is a quick win: it makes your site less obvious to bots, yet transparent to you and your users.
+
+---
+
+Changing the WordPress login URL is a simple yet effective way to **add security** to your site. For beginners and busy site owners, a plugin like **WPS Hide Login** or **iThemes Security** is the best approach: it’s quick and easy, and you don’t risk tinkering with core files. Developers and those comfortable with code can also do it manually for full control, but must be careful to use proper hooks and test thoroughly.
+
+In practice, our recommendation is: **Use a trusted plugin** (WPS Hide Login is my top pick for simplicity) to get the job done safely. If you’re already running a security suite like iThemes or WP Cerber, enable the hide-backend feature there. If you love custom tweaks and know PHP, the manual method works too – just remember the caveats about updates and backups.
+
+No matter which method you choose, changing the login URL should be paired with other measures. Even with a secret login page, hackers can still target your site through exploits or stolen credentials. Always enforce strong passwords, keep plugins and WordPress up-to-date, and consider enabling 2FA and CAPTCHA for real security. In the end, a hidden login is an extra obstacle – one more step that keeps *unauthorized users* out of your admin area while allowing *you* to log in securely.
+
+---
+
+## Further Reading
+
+* Official WPS Hide Login plugin (WordPress.org) – [Link to plugin](https://wordpress.org/plugins/wps-hide-login/)
+* **Perfmatters**: [How to Change WordPress Login URL](https://perfmatters.io/docs/change-wordpress-login-url/) – details and performance tips.
+* **MalCare**: [How To Change WordPress Login URL (3 Easy Ways)](https://www.malcare.com/blog/change-wordpress-login-url/) – plugin vs manual, pros/cons.
+* **Sucuri**: [How to Change WordPress Login URL (Beginner’s Guide)](https://blog.sucuri.net/2024/01/how-to-find-change-protect-the-wordpress-login-url-a-beginners-guide.html) – step-by-step with screenshots.
+* **Jetpack**: [WordPress Login URL Tutorial](https://jetpack.com/resources/wordpress-login-url/) – covers plugin and manual methods.
+* **Patchstack**: [Are Millions of WordPress Sites Under Attack?](https://patchstack.com/articles/patchstack-weekly-32-are-millions-of-wordpress-sites-really-under-attack/) – login attempt stats.
+* **Wordfence/iThemes Guides**: (Search their docs for *“hide login page”* for advanced insights.)

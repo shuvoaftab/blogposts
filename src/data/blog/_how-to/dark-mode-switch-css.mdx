@@ -1,27 +1,33 @@
 ---
 author: Ibrahim Sharif
-pubDatetime: 2019-07-14 09:30:00
+pubDatetime: 2020-07-14 09:30:00
 modDatetime: null
 title: Dark and Light theme toggle using CSS
 description: How to guide on Dark and Light theme toggle using CSS.
 tags:
+  - HTML
   - CSS
   - JavaScript
-  - Theme Toggle
+  - Theme
   - Web Design
   - UI
 category:
-  - Frontend
+  - Design
 featured: false
 draft: false
 ---
 
+Switching between dark and light themes has become a popular feature in modern web design, offering users the flexibility to choose a visual style that best suits their preferences or environment. Implementing a theme toggle not only enhances accessibility but also improves user experience by reducing eye strain in low-light conditions and providing a visually appealing interface. With CSS and a small amount of JavaScript, you can easily add a dark and light mode toggle to your website. This guide will walk you through the steps to create a seamless theme switcher using CSS variables and simple scripting.
 
 To implement a dark and light theme toggle for a website using CSS, you can use the following steps:
 
 ## Table of Contents
 
-## 1. **Define Theme Styles in CSS**
+## Start Coding your Dark Mode Switcher
+
+Before diving into the code, it's important to understand the benefits of implementing a dark mode switcher. This feature not only caters to user preferences but also enhances accessibility and comfort, especially in low-light environments. Let's explore how to build a simple and effective dark mode toggle for your website.
+
+### 1. Define Theme Styles in CSS
 
 Create styles for both light and dark themes. Use CSS variables (`--variable-name`) to make switching easier.
 
@@ -48,7 +54,7 @@ body {
 
 
 
-## 2. **Add a Theme Toggle Button in HTML**
+### 2. Add a Theme Toggle Button in HTML
 
 Create a button for toggling between themes.
 
@@ -58,7 +64,7 @@ Create a button for toggling between themes.
 
 
 
-## 3. **Write JavaScript for Theme Switching**
+### 3. Write JavaScript for Theme Switching
 
 Use JavaScript to toggle the theme by changing the `data-theme` attribute on the `<html>` element.
 
@@ -84,7 +90,7 @@ toggleButton.addEventListener('click', () => {
 
 
 
-## 4. **Add Transition for Smooth Effects (Optional)**
+### 4. Add Transition for Smooth Effects (Optional)
 
 For a smooth user experience, ensure transitions are added in the CSS:
 
@@ -95,7 +101,14 @@ body {
 ```
 
 
-## 5. **Test Your Implementation**
+### 5. Test Your Implementation
 
 - Save your work and test the button.
 - The theme should toggle between light and dark modes and persist after page reloads (thanks to `localStorage`).
+
+## Further Reading
+- [CSS Variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
+- [JavaScript Local Storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+- [Web Accessibility](https://www.w3.org/WAI/)
+- [light-dark() - CSS: Cascading Style Sheets - MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark)
+- [prefers-color-scheme - CSS: Cascading Style Sheets | MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme)

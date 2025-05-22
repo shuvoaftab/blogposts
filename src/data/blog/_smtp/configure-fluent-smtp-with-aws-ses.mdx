@@ -12,12 +12,14 @@ tags:
   - SES
   - SMTP
   - Email Deliverability
-category: WordPress
+category: 
+  - WordPress
+  - Email
 featured: false
 draft: false
 ---
 
-Amazon Simple Email Service (SES) is a cost-effective, flexible, and scalable email service that enables developers, and site owners to send mail from WordPress to their customers, and users or send notifications for test purposes. AWS SES is also the cheapest top-quality email delivery method available in the market. In this guide, we are going to. configure Fluent SMTP with AWS SES to send emails from WordPress through SES. If you have checked or reviewed my other article about [Configuring Gmail with Fluent SMTP](../configure-gmail-with-fluent-smtp/) you will find it easier to follow this guide.
+Amazon Simple Email Service (SES) is a cost-effective, flexible, and scalable email service that enables developers, and site owners to send mail from WordPress to their customers, and users or send notifications for test purposes. AWS SES is also the cheapest top-quality email delivery method available in the market. In this guide, we are going to. configure Fluent SMTP with AWS SES to send emails from WordPress through SES. If you have checked or reviewed my other article about [Configuring Gmail with Fluent SMTP](/posts/configure-gmail-with-fluent-smtp/) you will find it easier to follow this guide.
 
 ## Table of Contents
 
@@ -25,13 +27,13 @@ Amazon Simple Email Service (SES) is a cost-effective, flexible, and scalable em
 
 In order to proceed, there are a few things that are needed beforehand to configure Fluent SMTP with Yahoo as below:
 
-| Requirement             | Details                                                                                   |
+| **Requirement**             | **Details**                                                                                 |
 |-------------------------|-------------------------------------------------------------------------------------------|
-| **Verified Identity**   | You must verify an email or a domain as a verified identity inside AWS SES.               |
-| **Production Access**   | You must also get approval for Production access to send emails to users.                 |
-| **Administrative Permission** | WordPress Administrator Role-based user access.                                      |
-| **Firewall Status**     | Port 465 Opened on WordPress Server.                                                      |
-| **TLS Support**         | TLS v1.0, v1.1, v1.2, v1.3 support from the server where WordPress is hosted.             |
+| Verified Identity   | You must verify an email or a domain as a verified identity inside AWS SES.               |
+| Production Access   | You must also get approval for Production access to send emails to users.                 |
+| Administrative Permission | WordPress Administrator Role-based user access.                                      |
+| Firewall Status     | Port 465 Opened on WordPress Server.                                                      |
+| TLS Support         | TLS v1.0, v1.1, v1.2, v1.3 support from the server where WordPress is hosted.             |
 
 ## Steps to Configure Fluent SMTP with AWS SES
 
@@ -91,10 +93,10 @@ Now it's time to configure Fluent SMTP. Create a new SMTP Connection and the met
 
 ### Test the Connection
 
-Now it's time to test the connection if it's working or not! Go to Fluent SMTP > Email Test:  
-\-> Use the From as your Yahoo email is just configured.  
-\-> Send To where you want to receive the test email.  
-\-> HTML should be turned on to avoid suspicious activity by Spam Filters.
+Now it's time to test the connection if it's working or not! Go to Fluent SMTP => Email Test:  
+1. Use the From as your Yahoo email is just configured.  
+2. Send To where you want to receive the test email.  
+3. HTML should be turned on to avoid suspicious activity by Spam Filters.
 
 ![Fluent SMTP Email Test Successfully Sent](@/assets/images/posts/fluentsmtp/Fluent_SMTP_email_test_successfully_sent.png "Screenshot showing a successful email test in Fluent SMTP")
 
@@ -121,3 +123,27 @@ It is highly recommended to configure a cronjob replacing WordPress's Default PH
 Some hosting may not allow running a cronjob below 5 Minutes. But it is still better than a PHP-Based cronjob.
 
 Emails landing in Spam Folders depend on numerous factors including IP reputation, Domain reputation, and Email Body Content.
+
+
+## Frequently Asked Questions (FAQ)
+
+- **Do I need to verify my domain or email in AWS SES before configuring Fluent SMTP?**  
+  Yes, you must verify your sending domain or email address in AWS SES before you can send emails through Fluent SMTP. This is required by AWS to prevent unauthorized use.
+
+- **What region should I use for the SMTP Host?**  
+  The SMTP Host should match the AWS region where your SES is set up. For example, if your SES is in `us-east-1`, use `email-smtp.us-east-1.amazonaws.com`.
+
+- **What port and encryption should I use?**  
+  For most setups, use port **465** with **SSL** encryption. Make sure your server supports TLS and that port 465 is open.
+
+- **Why are my emails landing in the spam folder?**  
+  Emails may land in spam due to factors like IP reputation, domain reputation, or the content of your email. Ensure your domain has proper DNS records (SPF, DKIM, DMARC) and avoid spammy content.
+
+- **Can I use the same SMTP credentials on multiple WordPress sites?**  
+  Yes, you can use the same SMTP credentials on multiple sites, but it is recommended to create separate credentials for each site for better security and management.
+
+- **How do I delete unused SMTP users in AWS SES?**  
+  Go to the AWS IAM console, find the user associated with the SMTP credentials, and delete it. This helps maintain security by removing unused access.
+
+- **Is it necessary to set up a server cronjob for WordPress emails?**  
+  While not strictly required, setting up a server cronjob is highly recommended for reliable email delivery and scheduled tasks, as it is more dependable than WordPress's default PHP-based cron.

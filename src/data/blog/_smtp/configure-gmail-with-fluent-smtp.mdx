@@ -1,6 +1,6 @@
 ---
 author: Ibrahim Sharif
-pubDatetime: 2022-05-01 22:00:00
+pubDatetime: 2022-03-02 22:00:00
 modDatetime: null
 title: Configure Gmail with Fluent SMTP
 description: A guide to configuring your Gmail email with FluentSMTP for WordPress email delivery.
@@ -13,12 +13,17 @@ tags:
   - Workspace
   - SMTP
   - Email Deliverability
-category: WordPress
+category: 
+  - WordPress
+  - Email
 featured: false
 draft: false
 ---
 
-> This feature has been deprecated as of 2022 and the new method is to use app passwords. Please check out our new guide for that here: [**Configure Gmail or Google Workspace via SMTP in Fluent SMTP.**](../configure-google-gmail-with-fluent-smtp/)
+Gmail is one of the most widely used email services, trusted by millions of individuals and businesses worldwide for its reliability and robust security features. When it comes to sending emails from your WordPress website, using Gmail’s SMTP (Simple Mail Transfer Protocol) server can greatly improve email deliverability and ensure your messages reach their intended recipients. SMTP acts as a bridge between your website and Gmail, allowing you to send authenticated emails securely. In this guide, we’ll walk you through the process of configuring Gmail with the Fluent SMTP plugin, making it easy to send emails from your WordPress site using your Gmail or Google Workspace account.
+
+{/* TODO: create the new guide */}
+> This feature has been deprecated as of 2022 and the new method is to use app passwords. Please check out our new guide for that here: [**Configure Gmail or Google Workspace via SMTP in Fluent SMTP.**](/posts/configure-google-gmail-with-fluent-smtp/)
 > 
 > **Update in the Google's Security policy:**
 
@@ -108,9 +113,25 @@ Now click Send Test Email and check the destination Email Address.
 
 In this case, the test email is received and we are done configuring the Gmail Email address to send WordPress emails using the Fluent SMTP Plugin.
 
-## Important Note
+## Frequently Asked Questions (FAQ)
 
-It is highly recommended to configure a cron job replacing WordPress's Default PHP-based Cron job to operate Email sending and other scheduled jobs smoothly.  
-Some hosting may not allow running a cron job below 5 Minutes. But it is still better than a PHP-Based cron job.
+- **Can I use my regular Gmail password for SMTP authentication?**  
+  No, as of 2022, Google has deprecated the use of regular account passwords for SMTP authentication. You must use an App Password or follow the updated method described in the new guide.
 
-Emails landing in Spam Folders depend on numerous factors including IP reputation, Domain reputation, and Email Body Content.
+- **What should I do if I see an authentication error?**  
+  Double-check your email address and password. Ensure that "Allow less secure apps" is enabled and that you have unlocked the Display Captcha. If you are using 2-Step Verification, you must use an App Password.
+
+- **Is it safe to enable "Allow less secure apps"?**  
+  Enabling "Allow less secure apps" reduces your account's security. Google recommends using App Passwords or OAuth for better security. This method is only for legacy compatibility and may be removed in the future.
+
+- **Why is my test email not being delivered?**  
+  Check your SMTP settings, ensure the correct port and encryption are selected, and verify that your server supports TLS. Also, check your spam folder and make sure your firewall allows outbound connections on port 465.
+
+- **Can I use this method with Google Workspace accounts?**  
+  Yes, you can use this method with both personal Gmail and Google Workspace accounts, provided the necessary permissions and settings are enabled in your Google Admin Console.
+
+- **What are the alternatives if this method stops working?**  
+  If Google disables "Allow less secure apps," you should switch to using App Passwords or OAuth 2.0 authentication. Refer to the updated guide linked at the top of this article.
+
+- **Will this affect my Gmail account security?**  
+  Allowing less secure apps and sharing your password can increase security risks. Always use strong, unique passwords and consider enabling 2-Step Verification for your Google account.

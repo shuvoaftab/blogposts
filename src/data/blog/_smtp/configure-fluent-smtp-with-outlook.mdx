@@ -1,6 +1,6 @@
 ---
 author: Ibrahim Sharif
-pubDatetime: 2022-05-06 10:00:00
+pubDatetime: 2022-05-03 10:00:00
 modDatetime: null
 title: Configure Fluent SMTP with Outlook
 description: A guide to configuring your Outlook email with FluentSMTP for WordPress email delivery.
@@ -13,12 +13,16 @@ tags:
   - Microsoft
   - SMTP
   - Email Deliverability
-category: WordPress
+category: 
+  - WordPress
+  - Email
 featured: false
 draft: false
 ---
 
-The goal of this tutorial is to send emails from WordPress using your Personal Outlook Email **_@outlook.com_** by using the Fluent SMTP Plugin. If you have checked or reviewed my other article about [Configuring Gmail with Fluent SMTP](../configure-gmail-with-fluent-smtp/) you will find it easier to follow this guide.
+Outlook and Office 365 are widely used email services provided by Microsoft, offering robust solutions for both personal and business communications. These platforms support the Simple Mail Transfer Protocol (SMTP), which is the standard protocol for sending emails across the Internet. By leveraging SMTP, users can integrate their Outlook or Office 365 accounts with various applications, such as WordPress, to ensure reliable email delivery. Configuring SMTP correctly is essential for improving email deliverability, reducing the chances of messages landing in spam folders, and maintaining secure communication. This guide will walk you through connecting your Outlook email to WordPress using Fluent SMTP.
+
+The goal of this tutorial is to send emails from WordPress using your Personal Outlook Email **_@outlook.com_** by using the Fluent SMTP Plugin. If you have checked or reviewed my other article about [Configuring Gmail with Fluent SMTP](/posts/configure-gmail-with-fluent-smtp/) you will find it easier to follow this guide.
 
 ## Table of Contents
 
@@ -75,9 +79,9 @@ Now it's time to configure Fluent SMTP. Create a new SMTP Connection and the met
 ### Test the Connection
 
 Now it's time to test the connection if it's working or not! Go to Fluent SMTP > Email Test:  
-\-> Use the From as your Outlook email is just configured.  
-\-> Send To where you want to receive the test email.  
-\-> HTML should be turned on to avoid suspicious activity by Spam Filters.
+1. Use the From as your Outlook email is just configured.  
+2. Send To where you want to receive the test email.  
+3. HTML should be turned on to avoid suspicious activity by Spam Filters.
 
 ![Fluent SMTP test email sent successfully (generic screenshot)](@/assets/images/posts/fluentsmtp/fluent_smtp_gmail_test_sent_success.png)
 
@@ -87,10 +91,24 @@ Now click Send Test Email and check the destination Email Address.
 
 In this case, the test email is received and we are done configuring the Outlook Email address to send WordPress emails using the Fluent SMTP Plugin.
 
-## Important Note
+## Common Pitfalls to Avoid When Configuring Fluent SMTP with Outlook
 
-It is highly recommended to configure a cronjob replacing WordPress's Default PHP-based Cronjob to operate Email sending and other scheduled jobs smoothly.  
-Some hosting may not allow running a cronjob below 5 Minutes. But it is still better than a PHP-Based cronjob.
+When setting up Fluent SMTP with your Outlook account, keep these important points in mind to ensure a smooth experience:
 
-Emails landing in Spam Folders depend on numerous factors including IP reputation, Domain reputation, and Email Body Content.
+1. **Incorrect SMTP Credentials**  
+  Double-check your Outlook email address and password. Entering incorrect credentials will prevent Fluent SMTP from authenticating and sending emails.
 
+2. **Wrong SMTP Host or Port**  
+  Make sure to use the correct SMTP host (`smtp-mail.outlook.com`) and port (`587`). Using the wrong values will result in connection errors.
+
+3. **Disabled TLS Encryption**  
+  Always enable TLS encryption for secure email transmission. Disabling it can expose your credentials and sensitive data to security risks.
+
+4. **Firewall Blocking Port 587**  
+  Ensure that your hosting server’s firewall allows outbound connections on port 587. If this port is blocked, emails will not be sent.
+
+5. **Missing WordPress Administrator Permissions**  
+  Only users with administrator privileges can configure SMTP settings. Attempting setup with insufficient permissions will lead to errors or incomplete configuration.
+
+6. **Using App Passwords When Not Required**  
+  For most personal Outlook accounts, your regular password is sufficient. Only use app-specific passwords if your account has multi-factor authentication enabled. It is required mostly when the two factor authentication is enabled.

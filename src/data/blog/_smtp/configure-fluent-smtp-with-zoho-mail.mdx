@@ -1,6 +1,6 @@
 ---
 author: Ibrahim Sharif
-pubDatetime: 2022-05-11 20:40:00
+pubDatetime: 2022-07-11 20:40:00
 modDatetime: null
 title: Configure Fluent SMTP with Zoho Mail
 description: A guide to configuring your Zoho email with FluentSMTP for WordPress email delivery.
@@ -12,12 +12,16 @@ tags:
   - Workspace
   - SMTP
   - Email Deliverability
-category: WordPress
+category: 
+  - WordPress
+  - Email
 featured: false
 draft: false
 ---
 
-The goal of this tutorial is to send emails from WordPress using your Personal Zoho Mail Email **_@zohomail.com_** by using the Fluent SMTP Plugin. If you have checked or reviewed my other article about [Configuring Gmail with Fluent SMTP](../configure-gmail-with-fluent-smtp/) you will find it easier to follow this guide.
+Zoho Mail is a popular cloud-based email service known for its robust security, user-friendly interface, and reliable performance, making it a preferred choice for businesses and individuals alike. When it comes to sending emails from your WordPress site, using the Simple Mail Transfer Protocol (SMTP) ensures that your messages are delivered securely and reliably, reducing the chances of emails ending up in spam folders. Integrating Zoho Mail with WordPress via SMTP not only improves email deliverability but also allows you to leverage Zoho’s advanced features for all your site’s outgoing emails. This guide will walk you through configuring Zoho Mail with the Fluent SMTP plugin for WordPress.
+
+The goal of this tutorial is to send emails from WordPress using your Personal Zoho Mail Email **_@zohomail.com_** by using the Fluent SMTP Plugin. If you have checked or reviewed my other article about [Configuring Gmail with Fluent SMTP](/posts/configure-gmail-with-fluent-smtp/) you will find it easier to follow this guide.
 
 ## Table of Contents
 
@@ -74,9 +78,9 @@ Now it's time to configure Fluent SMTP. Create a new SMTP Connection and the met
 ### Test the Connection
 
 Now it's time to test the connection if it's working or not! Go to Fluent SMTP > Email Test:  
-\-> Use the From as your Zoho Mail email is just configured.  
-\-> Send To where you want to receive the test email.  
-\-> HTML should be turned on to avoid suspicious activity from Spam Filters.
+1. Use the From as your Zoho Mail email is just configured.  
+2. Send To where you want to receive the test email.  
+3. HTML should be turned on to avoid suspicious activity from Spam Filters.
 
 ![Fluent SMTP test email sent successfully (generic screenshot)](@/assets/images/posts/fluentsmtp/fluent_smtp_gmail_test_sent_success.png)
 
@@ -86,9 +90,25 @@ Now click Send Test Email and check the destination Email Address.
 
 In this case, the test email is received and we are done configuring the Zoho Mail Email address to send WordPress emails using the Fluent SMTP Plugin.
 
-## Important Note
+## Frequently Asked Questions (FAQ)
 
-It is highly recommended to configure a cronjob replacing WordPress's Default PHP-based Cronjob to operate Email sending and other scheduled jobs smoothly.  
-Some hosting may not allow running a cronjob below 5 Minutes. But it is still better than a PHP-Based cronjob.
+- **Can I use Zoho Mail with Fluent SMTP for free Zoho accounts?**  
+  Yes, you can use Zoho Mail with Fluent SMTP even if you have a free Zoho Mail account, as long as SMTP access is enabled for your account.
 
-Emails landing in Spam Folders depend on numerous factors including IP reputation, Domain reputation, and Email Body Content.
+- **What SMTP port should I use for Zoho Mail?**  
+  The recommended port is **465** with SSL encryption. Alternatively, you can use port **587** with TLS if your hosting provider does not support port 465.
+
+- **Why are my emails still going to spam?**  
+  Ensure your domain has proper SPF, DKIM, and DMARC records set up. Also, avoid using suspicious content or links in your emails.
+
+- **What should I do if the test email fails?**  
+  Double-check your SMTP settings, especially the email address and password. Make sure your hosting provider allows outbound SMTP connections on the required port.
+
+- **Is it safe to store my Zoho Mail password in Fluent SMTP?**  
+  Fluent SMTP stores credentials securely in your WordPress database, but for extra security, consider using environment variables or application-specific passwords.
+
+- **Can I use Zoho Mail with multiple WordPress sites?**  
+  Yes, you can use the same Zoho Mail account with multiple sites, but be mindful of Zoho’s sending limits and best practices.
+
+- **Do I need to change any DNS settings for Zoho Mail SMTP?**  
+  For best deliverability, ensure your domain’s DNS has the correct MX, SPF, and DKIM records as recommended by Zoho.
